@@ -29,3 +29,5 @@
   grid.cell(fill: color, block()),
   body,
 )
+
+#let awesome-block(body) = infobox(check-list-icon(blue), blue, body)
