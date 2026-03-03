@@ -20,6 +20,11 @@
   #place(dx: -12pt, dy: -2pt, circle(fill: color, radius: 2pt))
 ]
 
+#let file-svg(color) = read("file.svg").replace("#ffffff", color.to-hex())
+#let file(color, width: auto, height: auto) = image(bytes(file-svg(color)), width: width, height: height)
+
+#let file-icon(color) = place(dx: -10pt ,file(color, height: 140%))
+
 #let infobox(icon, color, body) = grid(
   columns: (15pt, 4pt, auto),
   rows: (auto, auto),
