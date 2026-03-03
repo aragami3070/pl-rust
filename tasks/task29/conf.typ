@@ -2,7 +2,6 @@
 #let red = rgb("#d62828")
 
 #let check-mark-svg(color) = read("check-mark.svg").replace("#ffffff", color.to-hex())
-
 #let check-mark(color, width: auto, height: auto) = image(bytes(check-mark-svg(color)), width: width, height: height)
 
 #let check-list-icon(color) = place()[
@@ -30,4 +29,4 @@
   body,
 )
 
-#let awesome-block(body) = infobox(check-list-icon(blue), blue, body)
+#let awesome-block(icon, body) = infobox(icon, blue, body)
