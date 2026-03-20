@@ -1,19 +1,6 @@
-#import "@preview/codly:1.2.0": *
-#import "@preview/codly-languages:0.1.6": *
-#import "@preview/touying:0.6.0": *
-#import themes.metropolis: *
-#import "@preview/cetz:0.3.1"
-#import "@preview/fletcher:0.5.3" as fletcher: node, edge
-#import "@preview/ctheorems:1.1.3": *
-#import "@preview/numbly:0.1.0": numbly
+#import "../globals.typ": *
 
-#let input-codly(file, from, to, lang) = {
-  let input = read(file)
-  let splitted = input.split("\n")
-  let slice = splitted.slice(from - 1, to)
-  let result = slice.join("\n")
-  raw(lang: lang, result, block: true)
-}
+= Введение
 
 == Про Rust
 
