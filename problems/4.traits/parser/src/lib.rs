@@ -3,9 +3,9 @@ use std::{
     char,
     collections::HashMap,
     error::Error,
-    fmt,
+    fmt::{self, Debug},
     fs::File,
-    io::{BufRead, BufReader},
+    io::{self, BufRead, BufReader},
     path::Path,
     rc::Rc,
     str::FromStr,
@@ -45,9 +45,7 @@ struct FileParserFactory {
 // TODO: используя FileParserFactory реализуйте данную функцию
 // Парсит все файы из списка путей нужным парсером, если это возможно
 // и возвращаем результат попытки парсинга для каждого файла
-pub fn try_parse_files<P: AsRef<Path>>(
-    paths: &[P],
-) -> Vec<Result<Table /* TODO: доопределите ошибку у Result */>> {
+pub fn try_parse_files<P: AsRef<Path>>(paths: &[P]) -> Vec<Result<Table, Errors>> {
     todo!()
 }
 
@@ -71,8 +69,33 @@ impl FromStr for ParserType {
     }
 }
 
-// NOTE: возможно здесь тоже стоит вместо реализации todo!() накинуть, но будто бы и так много
-// будет, а научить людей работать с разными типами ошибок одновременно стоит
+// NOTE: здесь тоже стоит вместо реализации todo!() накинуть, но не знаю на что именно
+pub enum Errors {
+    Io(io::Error),
+    Parser(ParserError),
+}
+
+impl From<std::io::Error> for Errors {
+    fn from(value: std::io::Error) -> Self {
+        Self::Io(value)
+    }
+}
+
+impl From<ParserError> for Errors {
+    fn from(value: ParserError) -> Self {
+        Self::Parser(value)
+    }
+}
+
+impl Debug for Errors {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Errors::Io(e) => e.fmt(f),
+            Errors::Parser(e) => e.fmt(f),
+        }
+    }
+}
+
 #[derive(Debug, PartialEq, Eq)]
 pub struct ParserError {
     kind: ParseErrorKind,
@@ -90,13 +113,13 @@ impl fmt::Display for ParserError {
     fn fmt(&self, formmater: &mut fmt::Formatter<'_>) -> fmt::Result {
         match &self.kind {
             ParseErrorKind::IncorrectFormatData => {
-                write!(
+                writeln!(
                     formmater,
-                    "Некорректный формат данных для данного парсера.\n",
+                    "Некорректный формат данных для данного парсера.",
                 )
             }
             ParseErrorKind::NotImplemented => {
-                write!(formmater, "Парсер для данного типа файла не реализован.\n",)
+                writeln!(formmater, "Парсер для данного типа файла не реализован.",)
             }
         }
     }
