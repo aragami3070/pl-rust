@@ -22,28 +22,18 @@ pub trait Parser {
 
 pub struct CsvParser;
 
-// TODO: опишите реализацию трейта Parser для CsvParser
+impl Parser for CsvParser {
+    // TODO: опишите реализацию трейта Parser для CsvParser
+}
 
 pub struct TsvParser;
 
-// TODO: опишите реализацию трейта Parser для TsvParser
-
-trait ParserFactory {
-    // TODO: объявите функцию/функции с нужными ограничениями типа для создания
-    // нужного парсера по пути до файла (кол-во функций зависит от вашей реализации)
+impl Parser for TsvParser {
+    // TODO: опишите реализацию трейта Parser для TsvParser
 }
 
-#[derive(Default)]
-struct FileParserFactory {
-    // TODO: определите кэш для созданных парсеров (созданные парсеры должны переиспользоваться, а
-    // не создаваться еще раз)
-    // Для реализации используйте ParserType
-}
 
-// TODO: опишите реализацию ParserFactory для FileParserFactory
-
-// TODO: используя FileParserFactory реализуйте данную функцию
-// Парсит все файы из списка путей нужным парсером, если это возможно
+// TODO: Парсит все файы из списка путей нужным парсером, если это возможно
 // и возвращаем результат попытки парсинга для каждого файла
 // NOTE: оно ругается т.к. вместо реализации макрос todo!
 pub fn try_parse_files<P: AsRef<Path>>(paths: &[P]) -> impl Iterator<Item = Result<Table, Errors>> {
@@ -71,6 +61,7 @@ impl FromStr for ParserType {
 }
 
 // FIX: здесь тоже стоит вместо реализации todo!() накинуть, но не знаю на что именно
+#[derive(Debug)]
 pub enum Errors {
     Io(io::Error),
     Parser(ParserError),
@@ -88,22 +79,13 @@ impl From<ParserError> for Errors {
     }
 }
 
-impl Debug for Errors {
-    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        match self {
-            Errors::Io(e) => e.fmt(f),
-            Errors::Parser(e) => e.fmt(f),
-        }
-    }
-}
-
 #[derive(Debug, PartialEq, Eq)]
 pub struct ParserError {
     kind: ParseErrorKind,
 }
 
 #[derive(Debug, PartialEq, Eq)]
-enum ParseErrorKind {
+pub enum ParseErrorKind {
     IncorrectFormatData,
     NotImplemented,
 }
