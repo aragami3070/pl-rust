@@ -2,7 +2,6 @@
 use std::{
     char,
     collections::HashMap,
-    error::Error,
     fmt::{self, Debug},
     fs::File,
     io::{self, BufRead, BufReader},
@@ -36,7 +35,7 @@ impl Parser for TsvParser {
 // TODO: Парсит все файы из списка путей нужным парсером, если это возможно
 // и возвращаем результат попытки парсинга для каждого файла
 // NOTE: оно ругается т.к. вместо реализации макрос todo!
-pub fn try_parse_files<P: AsRef<Path>>(paths: &[P]) -> impl Iterator<Item = Result<Table, Errors>> {
+pub fn try_parse_files<P: AsRef<Path>>(paths: &[P]) -> impl Iterator<Item = Result<Table, Error>> {
     todo!()
 }
 
@@ -62,18 +61,18 @@ impl FromStr for ParserType {
 
 // FIX: здесь тоже стоит вместо реализации todo!() накинуть, но не знаю на что именно
 #[derive(Debug)]
-pub enum Errors {
+pub enum Error {
     Io(io::Error),
     Parser(ParserError),
 }
 
-impl From<std::io::Error> for Errors {
+impl From<std::io::Error> for Error {
     fn from(value: std::io::Error) -> Self {
         Self::Io(value)
     }
 }
 
-impl From<ParserError> for Errors {
+impl From<ParserError> for Error {
     fn from(value: ParserError) -> Self {
         Self::Parser(value)
     }
@@ -90,7 +89,7 @@ pub enum ParseErrorKind {
     NotImplemented,
 }
 
-impl Error for ParserError {}
+impl std::error::Error for ParserError {}
 
 impl fmt::Display for ParserError {
     fn fmt(&self, formmater: &mut fmt::Formatter<'_>) -> fmt::Result {
